@@ -1,5 +1,8 @@
-function solarpressureforcevector = solarpressureforcevectorfunction(sunlight,panelSurface,noxpanels,noypanels,nozpanels,alphas,betas,gammas)
+function  solarpressureforcevector = solarpressureforcevectorfunction(sunlight,panelSurface,...
+          noxpanels,noypanels,nozpanels,alphas,betas,gammas)
+%% 
   solarpressureforcevector=zeros(3,size(alphas,2),size(betas,2),size(gammas,2));
+
   if norm(sunlight)==0
     return
   end  
@@ -74,28 +77,28 @@ function solarpressureforcevector = solarpressureforcevectorfunction(sunlight,pa
         end
         %%draw
         if draw
-            vectarrow([0 0 0],sunlight*solarPressure*panelSurface);hold on;text(sunlight(1)*solarPressure*panelSurface,sunlight(2)*solarPressure*panelSurface,sunlight(3)*solarPressure*panelSurface,"sunlight",'HorizontalAlignment','left','FontSize',6);
-            pg = [(RzY*Ry*RzR*pz1')' ; (RzY*Ry*RzR*pz2')' ; (RzY*Ry*RzR*pz3')' ; (RzY*Ry*RzR*pz4')' ; (RzY*Ry*RzR*pz1')'];
-            pg2 = [(RzY*Ry*RzR*pz12')' ; (RzY*Ry*RzR*pz22')' ; (RzY*Ry*RzR*pz32')' ; (RzY*Ry*RzR*pz42')' ; (RzY*Ry*RzR*pz12')'];
-            pg3 = [(RzY*Ry*RzR*pz13')' ; (RzY*Ry*RzR*pz23')' ; (RzY*Ry*RzR*pz33')' ; (RzY*Ry*RzR*pz43')' ; (RzY*Ry*RzR*pz13')'];
-            if nozpanels
-              vectarrow([0 0 0],sunforcevectorz);hold on;text(sunforcevectorz(1),sunforcevectorz(2),sunforcevectorz(3),"sunforce",'HorizontalAlignment','left','FontSize',6);
-              vectarrow([0 0 0],Igz);hold on;text(Igz(1),Igz(2),Igz(3),"normal",'HorizontalAlignment','left','FontSize',6);
-              line(pg(:,1), pg(:,2), pg(:,3));line(pg2(:,1), pg2(:,2), pg2(:,3));line(pg3(:,1), pg3(:,2), pg3(:,3));hold on;
-              axis([-axislength axislength -axislength axislength -axislength axislength]);
-            end
-            if noxpanels
-              vectarrow([0 0 0],Igx);hold on;text(Igx(1),Igx(2),Igx(3),"normalx",'HorizontalAlignment','left','FontSize',6);hold on;
-              vectarrow([0 0 0],sunforcevectorx);hold on;text(sunforcevectorx(1),sunforcevectorx(2),sunforcevectorx(3),"sunforcex",'HorizontalAlignment','left','FontSize',6);
-              line(pgx(:,1), pgx(:,2), pgx(:,3));line(pgx2(:,1), pgx2(:,2), pgx2(:,3));line(pgx3(:,1), pgx3(:,2), pgx3(:,3));hold on;
-              axis([-axislength axislength -axislength axislength -axislength axislength]);
-            end
-            if noypanels
-              vectarrow([0 0 0],Igy);hold on;text(Igy(1),Igy(2),Igy(3),"normaly",'HorizontalAlignment','left','FontSize',6);
-              vectarrow([0 0 0],sunforcevectory);hold on;text(sunforcevectory(1),sunforcevectory(2),sunforcevectory(3),"sunforcey",'HorizontalAlignment','left','FontSize',6); 
-              line(pgy(:,1), pgy(:,2), pgy(:,3));line(pgy2(:,1), pgy2(:,2), pgy2(:,3));line(pgy3(:,1), pgy3(:,2), pgy3(:,3));hold on;
-              axis([-axislength axislength -axislength axislength -axislength axislength]);
-            end
+          vectarrow([0 0 0],sunlight*solarPressure*panelSurface);hold on;text(sunlight(1)*solarPressure*panelSurface,sunlight(2)*solarPressure*panelSurface,sunlight(3)*solarPressure*panelSurface,"sunlight",'HorizontalAlignment','left','FontSize',6);
+          pg = [(RzY*Ry*RzR*pz1')' ; (RzY*Ry*RzR*pz2')' ; (RzY*Ry*RzR*pz3')' ; (RzY*Ry*RzR*pz4')' ; (RzY*Ry*RzR*pz1')'];
+          pg2 = [(RzY*Ry*RzR*pz12')' ; (RzY*Ry*RzR*pz22')' ; (RzY*Ry*RzR*pz32')' ; (RzY*Ry*RzR*pz42')' ; (RzY*Ry*RzR*pz12')'];
+          pg3 = [(RzY*Ry*RzR*pz13')' ; (RzY*Ry*RzR*pz23')' ; (RzY*Ry*RzR*pz33')' ; (RzY*Ry*RzR*pz43')' ; (RzY*Ry*RzR*pz13')'];
+          if nozpanels
+            vectarrow([0 0 0],sunforcevectorz);hold on;text(sunforcevectorz(1),sunforcevectorz(2),sunforcevectorz(3),"sunforce",'HorizontalAlignment','left','FontSize',6);
+            vectarrow([0 0 0],Igz);hold on;text(Igz(1),Igz(2),Igz(3),"normal",'HorizontalAlignment','left','FontSize',6);
+            line(pg(:,1), pg(:,2), pg(:,3));line(pg2(:,1), pg2(:,2), pg2(:,3));line(pg3(:,1), pg3(:,2), pg3(:,3));hold on;
+            axis([-axislength axislength -axislength axislength -axislength axislength]);
+          end
+          if noxpanels
+            vectarrow([0 0 0],Igx);hold on;text(Igx(1),Igx(2),Igx(3),"normalx",'HorizontalAlignment','left','FontSize',6);hold on;
+            vectarrow([0 0 0],sunforcevectorx);hold on;text(sunforcevectorx(1),sunforcevectorx(2),sunforcevectorx(3),"sunforcex",'HorizontalAlignment','left','FontSize',6);
+            line(pgx(:,1), pgx(:,2), pgx(:,3));line(pgx2(:,1), pgx2(:,2), pgx2(:,3));line(pgx3(:,1), pgx3(:,2), pgx3(:,3));hold on;
+            axis([-axislength axislength -axislength axislength -axislength axislength]);
+          end
+          if noypanels
+            vectarrow([0 0 0],Igy);hold on;text(Igy(1),Igy(2),Igy(3),"normaly",'HorizontalAlignment','left','FontSize',6);
+            vectarrow([0 0 0],sunforcevectory);hold on;text(sunforcevectory(1),sunforcevectory(2),sunforcevectory(3),"sunforcey",'HorizontalAlignment','left','FontSize',6); 
+            line(pgy(:,1), pgy(:,2), pgy(:,3));line(pgy2(:,1), pgy2(:,2), pgy2(:,3));line(pgy3(:,1), pgy3(:,2), pgy3(:,3));hold on;
+            axis([-axislength axislength -axislength axislength -axislength axislength]);
+          end
           %text(0,0,0,strcat('scalingfactor: ',int2str(scalingfactor)),'HorizontalAlignment','left','FontSize',6);
           xlabel('fx [N]');ylabel('fy [N]');zlabel('fz [N]');
           axis([-axislength axislength -axislength axislength -axislength axislength]);
@@ -122,7 +125,7 @@ function [theta,phi,Ig2]=thetaphi1(refvec, vec)
 end     
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function [drag,lift]=sundragliftcoef(theta)
-  drag=-abs(sind(theta-90));      %% simplified formula
-  lift=-abs(sind(2*(theta-90)));  %% simplified formula     
+  drag=-abs(2.8*sind(theta-90));      %% simplified formula
+  lift=-abs(0.42*sind(2*(theta-90)));  %% simplified formula     
 end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

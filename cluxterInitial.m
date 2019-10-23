@@ -1,10 +1,11 @@
-function [sstTemp,ns,altitude,panels,rho,v,radiusOfEarth,MeanMotion,mu,satelliteMass,panelSurface,...
-  sstDesiredFunction,windOn,sunOn,deltaAngle,timetemp,totalTime,wakeAerodynamics,masterSatellite]=cluxterInitial()
+function  [sstTemp,ns,altitude,panels,rho,v,radiusOfEarth,MeanMotion,mu,satelliteMass,panelSurface,...
+          sstDesiredFunction,windOn,sunOn,deltaAngle,timetemp,totalTime,wakeAerodynamics,masterSatellite]...
+          =cluxterInitial()
 %% initial conditions for Cluxter Mission
 
 
 %% simulation time constants
-  totalTime         =50*90*60;   %% simulation period (approximate multiples of orbit periods),[s]
+  totalTime         =20*90*60;   %% simulation period (approximate multiples of orbit periods),[s]
   compStep          =9;          %% computational step size in [s]
   lengthControlLoop =90;         %% in [s]
   timetemp  =0:compStep:lengthControlLoop; %% duration and interpolation timestep for each control loop
@@ -16,15 +17,19 @@ function [sstTemp,ns,altitude,panels,rho,v,radiusOfEarth,MeanMotion,mu,satellite
   sstDesiredFunction=@cluxterDesired;
   windOn       =1;
   sunOn        =1;
+  if sunOn
+    fprintf('\n only dusk-dawn orbits for the time being! Arbitrary orbits require rotation of sunlight vector\n');
+  end
   deltaAngle   =45;                   %% roll,pitch,yaw angle resolution
 
   ns=3;
   satelliteMass=1;
-  altitude=300000;                %% in m
+  %altitude=300000;               %% in m
+  altitude=500000;                %% in m
   argumentOfPerigeeAtTe0=0;       %% not used yet
   trueAnomalyAtTe0=0;             %% not used yet
-  ejectionVelocity=1;           %% m/s
-  timeBetweenEjections=4;        %% in s
+  ejectionVelocity=0.01;          %% m/s
+  timeBetweenEjections=0.01;      %% in s
   %startSecondPhase=8*2*pi/MeanMotion;  %% in s
   panelSurface=0.01;              %% m^2  
 
