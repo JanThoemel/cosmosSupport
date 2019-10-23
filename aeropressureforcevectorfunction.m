@@ -1,6 +1,6 @@
 function aerototalforcevector = aeropressureforcevectorfunction(wind,panelSurface,noxpanels,noypanels,nozpanels,alphas,betas,gammas,rho,v,Twall)
   aerototalforcevector =zeros(3,size(alphas,2),size(betas,2),size(gammas,2));
-
+ 
   if norm(wind)==0
     return
   end
