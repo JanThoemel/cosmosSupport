@@ -51,6 +51,7 @@ function  [ssttemptemp,controlVector]=HCWEquation(IR,P,A,B,deltat,sst0,e,windPre
   %% rotate sunforcevector if necessary
   if solarPressure>0 && wrapTo2Pi(meanMotion*currentTime0)*180/pi<acos(radiusOfEarth/(radiusOfEarth+altitude))...
     && wrapTo2Pi(meanMotion*currentTime0)*180/pi<360-acos(radiusOfEarth/(radiusOfEarth+altitude))
+      %% satellite is in sun light
     for k=1:size(gammas,2)
      for j=1:size(betas,2)
        for i=1:size(alphas,2)
@@ -60,8 +61,7 @@ function  [ssttemptemp,controlVector]=HCWEquation(IR,P,A,B,deltat,sst0,e,windPre
        end
      end
     end
-  else
-    %%%% whats the factor 0 here????
+  else %% satellite is eclipsed
     rotatedSunForceVector=0*solarpressureforcevector;
   end  
   %}
@@ -115,5 +115,6 @@ function  [ssttemptemp,controlVector]=HCWEquation(IR,P,A,B,deltat,sst0,e,windPre
   ssttemptemp(1:6)=(A*sst0(1:6)+B*forceVector/satelliteMass)*deltat+sst0(1:6); 
  
   ssttemptemp(7:9)=[alphaOpt betaOpt gammaOpt]';
-  %forceVector
+  %fprintf('f')
+ % forceVector'
 end
