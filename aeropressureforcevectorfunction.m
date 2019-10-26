@@ -38,7 +38,11 @@ function aerototalforcevector = aeropressureforcevectorfunction(wind,panelSurfac
           Igz=RzY*Ry*RzR*Iz;
           [thetaaero(i,j,k),phiaero(i,j,k),Igz2]=thetaphi1(wind, Igz);
           [aerodragcoef(i,j,k),aeroliftcoef(i,j,k)]=aeroDragLiftCoef(thetaaero(i,j,k));
-          %[aerodragcoef(i,j,k),aeroliftcoef(i,j,k)]= aeroDragLiftSentman(thetaaero(i,j,k),Twall,v,rho);         
+          %aerodragcoef(i,j,k)
+          %aeroliftcoef(i,j,k)
+          %[aerodragcoef(i,j,k),aeroliftcoef(i,j,k)]= aeroDragLiftSentman(thetaaero(i,j,k),Twall,v,rho);     
+          %aerodragcoef(i,j,k)
+          %aeroliftcoef(i,j,k)
           aeroforcevectorz=-wind           *    aerodragcoef(i,j,k)*windPressure*panelSurface;
           ax=cross(wind,Igz2);
           if norm(ax)~=0
@@ -52,7 +56,11 @@ function aerototalforcevector = aeropressureforcevectorfunction(wind,panelSurfac
           Igx=RzY*Ry*RzR*Ix;
           [thetaaero(i,j,k),phiaero(i,j,k),Igx2]=thetaphi1(wind, Igx);
           [aerodragcoef(i,j,k),aeroliftcoef(i,j,k)]=aeroDragLiftCoef(thetaaero(i,j,k));
-          %[aerodragcoef(i,j,k),aeroliftcoef(i,j,k)]= aeroDragLiftSentman(thetaaero(i,j,k),Twall,v,rho);         
+          %aerodragcoef(i,j,k)
+          %aeroliftcoef(i,j,k)
+          %[aerodragcoef(i,j,k),aeroliftcoef(i,j,k)]= aeroDragLiftSentman(thetaaero(i,j,k),Twall,v,rho);
+          %aerodragcoef(i,j,k)
+          %aeroliftcoef(i,j,k)
           aeroforcevectorx=-wind                         *  aerodragcoef(i,j,k)*windPressure*panelSurface;
           ax=cross(wind,Igx2);
           if norm(ax)~=0
@@ -66,7 +74,11 @@ function aerototalforcevector = aeropressureforcevectorfunction(wind,panelSurfac
           Igy=RzY*Ry*RzR*Iy;
           [thetaaero(i,j,k),phiaero(i,j,k),Igy2]=thetaphi1(wind, Igy);
           [aerodragcoef(i,j,k),aeroliftcoef(i,j,k)]=aeroDragLiftCoef(thetaaero(i,j,k));
+          %aerodragcoef(i,j,k)
+          %aeroliftcoef(i,j,k)
           %[aerodragcoef(i,j,k),aeroliftcoef(i,j,k)]= aeroDragLiftSentman(thetaaero(i,j,k),Twall,v,rho);         
+          %aerodragcoef(i,j,k)
+          %aeroliftcoef(i,j,k)
           aeroforcevectory=-wind        *  aerodragcoef(i,j,k)*windPressure*panelSurface;
           ax=cross(wind,Igy2) ;
           if norm(ax)~=0
@@ -120,6 +132,7 @@ function aerototalforcevector = aeropressureforcevectorfunction(wind,panelSurfac
         end
         aerototalforcevector(:,i,j,k)=aeroforcevectorz+aeroforcevectorx+aeroforcevectory;
       end
+      %input('qaz')
     end
   end
   fprintf(' - done\n');
@@ -145,7 +158,8 @@ end
 
 
 function [CD,CL]=aeroDragLiftSentman(theta,Twall,v,rho)
-  
+%%
+%% currently, only atomic oxygen is considered, this needs to be generalized to account for Helium too.
   R=8.31446261815324; %% ideal gas constant 	[J·K-1·mol-1]
   M=0.016;            %% molar mass oxygen [kg/mol]
   no=rho/M*6.022140857e23;              %% [kg/m^3/kg*mol*number/mol]=number/m^3
@@ -170,8 +184,8 @@ function [CD,CL]=aeroDragLiftSentman(theta,Twall,v,rho)
   alpha=7.5e-17*no*Twall/(1+7.5e-17*no*Twall);
   %% Koppenwallner
   %% Koppenwallner, G.: Energy accommodation coefficient and
-  %% vmomentum transfer modeling. In: HTG-TN-08-11. HTG Hyperschall
-  %% vTechnologie Göttingen (2009)
+  %% momentum transfer modeling. In: HTG-TN-08-11. HTG Hyperschall
+  %% Technologie Göttingen (2009)
   vrvinf=sqrt(1/2*(1+alpha*(4*R/M*Twall/v^2-1)));
     
   CD=P/sqrt(pi)+gamma*Q*Z+gamma/2*vrvinf*(gamma*sqrt(pi)*Z+P);

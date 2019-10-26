@@ -110,7 +110,7 @@ function  [ssttemptemp,controlVector]=HCWEquation(IR,P,A,B,deltat,sst0,e,windPre
     input('error');
   end  %% passive/active master switch
 
-  [forceVector,alphaOpt,betaOpt,gammaOpt]=findBestAerodynamicAngles(usedTotalForceVector,controlVector,alphas,betas,gammas,oldAlphaOpt,oldBetaOpt,oldGammaOpt);
+  [forceVector,alphaOpt,betaOpt,gammaOpt]=findBestAttitude(usedTotalForceVector,controlVector,alphas,betas,gammas,oldAlphaOpt,oldBetaOpt,oldGammaOpt);
   %% solve ODE with backward Euler step
   ssttemptemp(1:6)=(A*sst0(1:6)+B*forceVector/satelliteMass)*deltat+sst0(1:6); 
  
