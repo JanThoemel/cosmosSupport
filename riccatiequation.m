@@ -1,6 +1,6 @@
-function [P,IR,A,B]=riccatiequation(meanMotion)
+function [P,IR,A,B]=riccatiequation(meanMotion,SSCoeff)
 %%  input variables
-%%  -meanMotion     mean motion as defined as Keplerian element, [rad/s], double
+%%  -meanMotion     mean motion as defined as Keplerian element, [rad/s], double %% should be in [deg]
 %%  output variables
 %%  -P
 %%  -IR

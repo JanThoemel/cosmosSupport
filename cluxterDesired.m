@@ -10,7 +10,6 @@ function sstDesired=cluxterDesired(time,meanMotion,i,goFoFli,SSCoeff,SSParameter
 
 %% desired solution for Cluxter mission
 
-
   sstDesired=zeros(9,1,size(time,2));
   %% analytical solution according to Ivanov
     A=7;    D=15;
@@ -41,29 +40,29 @@ function sstDesired=cluxterDesired(time,meanMotion,i,goFoFli,SSCoeff,SSParameter
  %   SSParameters
     switch i
       case 1
-        sstDesired(1,:)=  SSParameters(2,goFoFli) + B*meanMotion*SSParameters(6,goFoFli)*time + SSParameters(1,goFoFli)*cos(sqrt(2*SSCoeff/A)*meanMotion*time+meanAnomalyOffSet) - SSParameters(5,goFoFli)*sqrt(2*SSCoeff*A)*sin(sqrt(2*SSCoeff/A)*meanMotion*time+meanAnomalyOffSet);
-        sstDesired(2,:)=  SSParameters(3,goFoFli)*cos(D*meanMotion*time+meanAnomalyOffSet) + SSParameters(4,goFoFli)/D/meanMotion*sin(D*meanMotion*time+meanAnomalyOffSet);
-        sstDesired(3,:)=  SSParameters(6,goFoFli) + SSParameters(5,goFoFli)*cos(sqrt(2*SSCoeff/A)*meanMotion*time+meanAnomalyOffSet) + SSParameters(1,goFoFli)/sqrt(2*SSCoeff*A)*sin(sqrt(2*SSCoeff/A)*meanMotion*time+meanAnomalyOffSet);
+        sstDesired(1,:)=  SSParameters(2) + B*meanMotion*SSParameters(6)*time + SSParameters(1)*cos(sqrt(2*SSCoeff/A)*meanMotion*time+meanAnomalyOffSet) - SSParameters(5)*sqrt(2*SSCoeff*A)*sin(sqrt(2*SSCoeff/A)*meanMotion*time+meanAnomalyOffSet);
+        sstDesired(2,:)=  SSParameters(3)*cos(D*meanMotion*time+meanAnomalyOffSet) + SSParameters(4)/D/meanMotion*sin(D*meanMotion*time+meanAnomalyOffSet);
+        sstDesired(3,:)=  SSParameters(6) + SSParameters(5)*cos(sqrt(2*SSCoeff/A)*meanMotion*time+meanAnomalyOffSet) + SSParameters(1)/sqrt(2*SSCoeff*A)*sin(sqrt(2*SSCoeff/A)*meanMotion*time+meanAnomalyOffSet);
 
-        sstDesired(4,:)=                                                                       -SSParameters(1,goFoFli)*sin(sqrt(2*SSCoeff/A)*meanMotion*time+meanAnomalyOffSet)*sqrt(2*SSCoeff/A)*meanMotion - SSParameters(5,goFoFli)*sqrt(2*SSCoeff*A)*cos(sqrt(2*SSCoeff/A)*meanMotion*time+meanAnomalyOffSet)*sqrt(2*SSCoeff/A)*meanMotion;
-        sstDesired(5,:)=  -SSParameters(3,goFoFli)*sin(D*meanMotion*time + meanAnomalyOffSet)*D*meanMotion + SSParameters(4,goFoFli)/D/meanMotion*cos(D*meanMotion*time + meanAnomalyOffSet)*D*meanMotion;
-        sstDesired(6,:)=                            -SSParameters(5,goFoFli)*sin(sqrt(2*SSCoeff/A)*meanMotion*time+meanAnomalyOffSet)*sqrt(2*SSCoeff*A)*meanMotion + SSParameters(1,goFoFli)/sqrt(2*SSCoeff/A)*cos(sqrt(2*SSCoeff/A)*meanMotion*time+meanAnomalyOffSet)*sqrt(2*SSCoeff/A)*meanMotion;
+        sstDesired(4,:)=                                                                       -SSParameters(1)*sin(sqrt(2*SSCoeff/A)*meanMotion*time+meanAnomalyOffSet)*sqrt(2*SSCoeff/A)*meanMotion - SSParameters(5)*sqrt(2*SSCoeff*A)*cos(sqrt(2*SSCoeff/A)*meanMotion*time+meanAnomalyOffSet)*sqrt(2*SSCoeff/A)*meanMotion;
+        sstDesired(5,:)=  -SSParameters(3)*sin(D*meanMotion*time + meanAnomalyOffSet)*D*meanMotion + SSParameters(4)/D/meanMotion*cos(D*meanMotion*time + meanAnomalyOffSet)*D*meanMotion;
+        sstDesired(6,:)=                            -SSParameters(5)*sin(sqrt(2*SSCoeff/A)*meanMotion*time+meanAnomalyOffSet)*sqrt(2*SSCoeff*A)*meanMotion + SSParameters(1)/sqrt(2*SSCoeff/A)*cos(sqrt(2*SSCoeff/A)*meanMotion*time+meanAnomalyOffSet)*sqrt(2*SSCoeff/A)*meanMotion;
       case 2   
-        sstDesired(1,:)=  SSParameters(2,goFoFli) + B*meanMotion*SSParameters(6,goFoFli)*time + SSParameters(1,goFoFli)*cos(sqrt(2*SSCoeff/A)*meanMotion*time+meanAnomalyOffSet) - SSParameters(5,goFoFli)*sqrt(2*SSCoeff*A)*sin(sqrt(2*SSCoeff/A)*meanMotion*time+meanAnomalyOffSet);
-        sstDesired(2,:)=  SSParameters(3,goFoFli)*cos(D*meanMotion*time+meanAnomalyOffSet) + SSParameters(4,goFoFli)/D/meanMotion*sin(D*meanMotion*time+meanAnomalyOffSet);
-        sstDesired(3,:)=  SSParameters(6,goFoFli) + SSParameters(5,goFoFli)*cos(sqrt(2*SSCoeff/A)*meanMotion*time+meanAnomalyOffSet) + SSParameters(1,goFoFli)/sqrt(2*SSCoeff*A)*sin(sqrt(2*SSCoeff/A)*meanMotion*time+meanAnomalyOffSet);
+        sstDesired(1,:)=  SSParameters(2) + B*meanMotion*SSParameters(6)*time + SSParameters(1)*cos(sqrt(2*SSCoeff/A)*meanMotion*time+meanAnomalyOffSet) - SSParameters(5)*sqrt(2*SSCoeff*A)*sin(sqrt(2*SSCoeff/A)*meanMotion*time+meanAnomalyOffSet);
+        sstDesired(2,:)=  SSParameters(3)*cos(D*meanMotion*time+meanAnomalyOffSet) + SSParameters(4)/D/meanMotion*sin(D*meanMotion*time+meanAnomalyOffSet);
+        sstDesired(3,:)=  SSParameters(6) + SSParameters(5)*cos(sqrt(2*SSCoeff/A)*meanMotion*time+meanAnomalyOffSet) + SSParameters(1)/sqrt(2*SSCoeff*A)*sin(sqrt(2*SSCoeff/A)*meanMotion*time+meanAnomalyOffSet);
 
-        sstDesired(4,:)=                                                                       -SSParameters(1,goFoFli)*sin(sqrt(2*SSCoeff/A)*meanMotion*time+meanAnomalyOffSet)*sqrt(2*SSCoeff/A)*meanMotion - SSParameters(5,goFoFli)*sqrt(2*SSCoeff*A)*cos(sqrt(2*SSCoeff/A)*meanMotion*time+meanAnomalyOffSet)*sqrt(2*SSCoeff/A)*meanMotion;
-        sstDesired(5,:)=  -SSParameters(3,goFoFli)*sin(D*meanMotion*time + meanAnomalyOffSet)*D*meanMotion + SSParameters(4,goFoFli)/D/meanMotion*cos(D*meanMotion*time + meanAnomalyOffSet)*D*meanMotion;
-        sstDesired(6,:)=                            -SSParameters(5,goFoFli)*sin(sqrt(2*SSCoeff/A)*meanMotion*time+meanAnomalyOffSet)*sqrt(2*SSCoeff*A)*meanMotion + SSParameters(1,goFoFli)/sqrt(2*SSCoeff/A)*cos(sqrt(2*SSCoeff/A)*meanMotion*time+meanAnomalyOffSet)*sqrt(2*SSCoeff/A)*meanMotion;
+        sstDesired(4,:)=                                                                       -SSParameters(1)*sin(sqrt(2*SSCoeff/A)*meanMotion*time+meanAnomalyOffSet)*sqrt(2*SSCoeff/A)*meanMotion - SSParameters(5)*sqrt(2*SSCoeff*A)*cos(sqrt(2*SSCoeff/A)*meanMotion*time+meanAnomalyOffSet)*sqrt(2*SSCoeff/A)*meanMotion;
+        sstDesired(5,:)=  -SSParameters(3)*sin(D*meanMotion*time + meanAnomalyOffSet)*D*meanMotion + SSParameters(4)/D/meanMotion*cos(D*meanMotion*time + meanAnomalyOffSet)*D*meanMotion;
+        sstDesired(6,:)=                            -SSParameters(5)*sin(sqrt(2*SSCoeff/A)*meanMotion*time+meanAnomalyOffSet)*sqrt(2*SSCoeff*A)*meanMotion + SSParameters(1)/sqrt(2*SSCoeff/A)*cos(sqrt(2*SSCoeff/A)*meanMotion*time+meanAnomalyOffSet)*sqrt(2*SSCoeff/A)*meanMotion;
       case 3
-        sstDesired(1,:)=  SSParameters(2,goFoFli) + B*meanMotion*SSParameters(6,goFoFli)*time + SSParameters(1,goFoFli)*cos(sqrt(2*SSCoeff/A)*meanMotion*time+meanAnomalyOffSet) - SSParameters(5,goFoFli)*sqrt(2*SSCoeff*A)*sin(sqrt(2*SSCoeff/A)*meanMotion*time+meanAnomalyOffSet);
-        sstDesired(2,:)=  SSParameters(3,goFoFli)*cos(D*meanMotion*time+meanAnomalyOffSet) + SSParameters(4,goFoFli)/D/meanMotion*sin(D*meanMotion*time+meanAnomalyOffSet);
-        sstDesired(3,:)=  SSParameters(6,goFoFli) + SSParameters(5,goFoFli)*cos(sqrt(2*SSCoeff/A)*meanMotion*time+meanAnomalyOffSet) + SSParameters(1,goFoFli)/sqrt(2*SSCoeff*A)*sin(sqrt(2*SSCoeff/A)*meanMotion*time+meanAnomalyOffSet);
+        sstDesired(1,:)=  SSParameters(2) + B*meanMotion*SSParameters(6)*time + SSParameters(1)*cos(sqrt(2*SSCoeff/A)*meanMotion*time+meanAnomalyOffSet) - SSParameters(5)*sqrt(2*SSCoeff*A)*sin(sqrt(2*SSCoeff/A)*meanMotion*time+meanAnomalyOffSet);
+        sstDesired(2,:)=  SSParameters(3)*cos(D*meanMotion*time+meanAnomalyOffSet) + SSParameters(4)/D/meanMotion*sin(D*meanMotion*time+meanAnomalyOffSet);
+        sstDesired(3,:)=  SSParameters(6) + SSParameters(5)*cos(sqrt(2*SSCoeff/A)*meanMotion*time+meanAnomalyOffSet) + SSParameters(1)/sqrt(2*SSCoeff*A)*sin(sqrt(2*SSCoeff/A)*meanMotion*time+meanAnomalyOffSet);
 
-        sstDesired(4,:)=                                                                       -SSParameters(1,goFoFli)*sin(sqrt(2*SSCoeff/A)*meanMotion*time+meanAnomalyOffSet)*sqrt(2*SSCoeff/A)*meanMotion - SSParameters(5,goFoFli)*sqrt(2*SSCoeff*A)*cos(sqrt(2*SSCoeff/A)*meanMotion*time+meanAnomalyOffSet)*sqrt(2*SSCoeff/A)*meanMotion;
-        sstDesired(5,:)=  -SSParameters(3,goFoFli)*sin(D*meanMotion*time + meanAnomalyOffSet)*D*meanMotion + SSParameters(4,goFoFli)/D/meanMotion*cos(D*meanMotion*time + meanAnomalyOffSet)*D*meanMotion;
-        sstDesired(6,:)=                            -SSParameters(5,goFoFli)*sin(sqrt(2*SSCoeff/A)*meanMotion*time+meanAnomalyOffSet)*sqrt(2*SSCoeff*A)*meanMotion + SSParameters(1,goFoFli)/sqrt(2*SSCoeff/A)*cos(sqrt(2*SSCoeff/A)*meanMotion*time+meanAnomalyOffSet)*sqrt(2*SSCoeff/A)*meanMotion;
+        sstDesired(4,:)=                                                                       -SSParameters(1)*sin(sqrt(2*SSCoeff/A)*meanMotion*time+meanAnomalyOffSet)*sqrt(2*SSCoeff/A)*meanMotion - SSParameters(5)*sqrt(2*SSCoeff*A)*cos(sqrt(2*SSCoeff/A)*meanMotion*time+meanAnomalyOffSet)*sqrt(2*SSCoeff/A)*meanMotion;
+        sstDesired(5,:)=  -SSParameters(3)*sin(D*meanMotion*time + meanAnomalyOffSet)*D*meanMotion + SSParameters(4)/D/meanMotion*cos(D*meanMotion*time + meanAnomalyOffSet)*D*meanMotion;
+        sstDesired(6,:)=                            -SSParameters(5)*sin(sqrt(2*SSCoeff/A)*meanMotion*time+meanAnomalyOffSet)*sqrt(2*SSCoeff*A)*meanMotion + SSParameters(1)/sqrt(2*SSCoeff/A)*cos(sqrt(2*SSCoeff/A)*meanMotion*time+meanAnomalyOffSet)*sqrt(2*SSCoeff/A)*meanMotion;
     end
 %    fprintf('\n new\n')
 %    sstDesired(:,1)

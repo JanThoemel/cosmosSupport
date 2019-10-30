@@ -22,8 +22,8 @@ function aerototalforcevector = aeropressureforcevectorfunction(wind,panelSurfac
   pz13 = 0.66*pz1; pz23 = 0.66*pz2; pz33 = 0.66*pz3; pz43 = 0.66*pz4;
   thetaaero=zeros(size(gammas,2),size(betas,2),size(alphas,2));
   phiaero=zeros(size(gammas,2),size(betas,2),size(alphas,2));
-  aerodragcoef=zeros(size(gammas,2),size(betas,2),size(alphas,2));
-  aeroliftcoef=zeros(size(gammas,2),size(betas,2),size(alphas,2));
+  CD=zeros(size(gammas,2),size(betas,2),size(alphas,2));
+  CL=zeros(size(gammas,2),size(betas,2),size(alphas,2));
   aeroforcevectorz=[0 0 0]';
   aeroforcevectorx=[0 0 0]';
   aeroforcevectory=[0 0 0]';
@@ -38,43 +38,43 @@ function aerototalforcevector = aeropressureforcevectorfunction(wind,panelSurfac
           Igz=RzY*Ry*RzR*Iz;
           [thetaaero(i,j,k),phiaero(i,j,k),Igz2]=thetaphi1(wind, Igz);
           %[aerodragcoef(i,j,k),aeroliftcoef(i,j,k)]=aeroDragLiftCoef(thetaaero(i,j,k));
-          [aerodragcoef(i,j,k),aeroliftcoef(i,j,k)]= aeroDragLiftSentman(thetaaero(i,j,k),Tatmos,v,rho);     
-          aeroforcevectorz=-wind           *    aerodragcoef(i,j,k)*windPressure*panelSurface;
+          [CD(i,j,k),CL(i,j,k)]= aeroDragLiftSentman(thetaaero(i,j,k),Tatmos,v,rho);     
+          aeroforcevectorz=-wind           *    CD(i,j,k)*windPressure*panelSurface;
           ax=cross(wind,Igz2);
           if norm(ax)~=0
             liftvector = rodrigues_rot(wind,ax,90/180*pi);
           else
             liftvector = [0 0 0]';
           end
-          aeroforcevectorz=nozpanels*(-liftvector      *    aeroliftcoef(i,j,k)*windPressure*panelSurface + aeroforcevectorz);
+          aeroforcevectorz=nozpanels*(-liftvector      *    CL(i,j,k)*windPressure*panelSurface + aeroforcevectorz);
         end 
         if noxpanels %% xpanel
           Igx=RzY*Ry*RzR*Ix;
           [thetaaero(i,j,k),phiaero(i,j,k),Igx2]=thetaphi1(wind, Igx);
           %[aerodragcoef(i,j,k),aeroliftcoef(i,j,k)]=aeroDragLiftCoef(thetaaero(i,j,k));
-          [aerodragcoef(i,j,k),aeroliftcoef(i,j,k)]= aeroDragLiftSentman(thetaaero(i,j,k),Tatmos,v,rho);
-          aeroforcevectorx=-wind                         *  aerodragcoef(i,j,k)*windPressure*panelSurface;
+          [CD(i,j,k),CL(i,j,k)]= aeroDragLiftSentman(thetaaero(i,j,k),Tatmos,v,rho);
+          aeroforcevectorx=-wind                         *  CD(i,j,k)*windPressure*panelSurface;
           ax=cross(wind,Igx2);
           if norm(ax)~=0
             liftvector = rodrigues_rot(wind,ax,90/180*pi);
           else
             liftvector = [0 0 0]';
           end
-          aeroforcevectorx=noxpanels*(-liftvector *  aeroliftcoef(i,j,k)*windPressure*panelSurface + aeroforcevectorx);
+          aeroforcevectorx=noxpanels*(-liftvector *  CL(i,j,k)*windPressure*panelSurface + aeroforcevectorx);
         end
         if noypanels %% xpanel
           Igy=RzY*Ry*RzR*Iy;
           [thetaaero(i,j,k),phiaero(i,j,k),Igy2]=thetaphi1(wind, Igy);
           %[aerodragcoef(i,j,k),aeroliftcoef(i,j,k)]=aeroDragLiftCoef(thetaaero(i,j,k));
-          [aerodragcoef(i,j,k),aeroliftcoef(i,j,k)]= aeroDragLiftSentman(thetaaero(i,j,k),Tatmos,v,rho);         
-          aeroforcevectory=-wind        *  aerodragcoef(i,j,k)*windPressure*panelSurface;
+          [CD(i,j,k),CL(i,j,k)]= aeroDragLiftSentman(thetaaero(i,j,k),Tatmos,v,rho);         
+          aeroforcevectory=-wind        *  CD(i,j,k)*windPressure*panelSurface;
           ax=cross(wind,Igy2) ;
           if norm(ax)~=0
             liftvector = rodrigues_rot(wind,ax,90/180*pi);
           else
             liftvector = [0 0 0]';
           end            
-          aeroforcevectory=noypanels*(-liftvector  *  aeroliftcoef(i,j,k)*windPressure*panelSurface + aeroforcevectory);
+          aeroforcevectory=noypanels*(-liftvector  *  CL(i,j,k)*windPressure*panelSurface + aeroforcevectory);
         end
         %%draw
         if draw

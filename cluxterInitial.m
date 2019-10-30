@@ -41,7 +41,7 @@ function  [sstTemp,ns,altitude,panels,rho,Tatmos,v,radiusOfEarth,MeanMotion,mu,s
   inclination=SSOinclination;   %%
   %inclination=0                %% manualinclination
   
-  SSCoeff=sqrt(1+3*J2*radiusOfEarth^2/8/r0^2*(1+3*cosd(2*inclination)))^J2On 
+  SSCoeff=sqrt(1+3*J2*radiusOfEarth^2/8/r0^2*(1+3*cosd(2*inclination)))^J2On; 
    
   %% initial conditions
   sstTemp=zeros(9,ns,size(timetemp,2));
@@ -67,12 +67,12 @@ function  [sstTemp,ns,altitude,panels,rho,Tatmos,v,radiusOfEarth,MeanMotion,mu,s
   SSParameters(5,1,1)=0;     %%
   SSParameters(6,1,1)=0;     %%
 
-SSParameters(1,2,1)=2*Aold;     %% xmax
-SSParameters(2,2,1)=0;              %% xpermanent.only here, could assume any value
-SSParameters(3,2,1)=Aold*sqrt(3);   %% ymax
-SSParameters(4,2,1)=0;              %% ymaxdot0
-SSParameters(5,2,1)=0;%Aold;           %% zmax
-SSParameters(6,2,1)=0;              %% zpermanent, it is a permanent nadir-zenit movement should always be zero because it implies a permant ram-antiram movement. should this ever be non-zero, all has to be verified
+  SSParameters(1,2,1)=2*Aold;     %% xmax
+  SSParameters(2,2,1)=0;              %% xpermanent.only here, could assume any value
+  SSParameters(3,2,1)=Aold*sqrt(3);   %% ymax
+  SSParameters(4,2,1)=0;              %% ymaxdot0
+  SSParameters(5,2,1)=0;%Aold;           %% zmax
+  SSParameters(6,2,1)=0;              %% zpermanent, it is a permanent nadir-zenit movement should always be zero because it implies a permant ram-antiram movement. should this ever be non-zero, all has to be verified
 
   SSParameters(1,3,1)=0;     %%
   SSParameters(2,3,1)=Dold;     %%
