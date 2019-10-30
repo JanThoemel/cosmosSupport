@@ -1,11 +1,11 @@
-function  [sstTemp,ns,altitude,panels,rho,v,radiusOfEarth,MeanMotion,mu,satelliteMass,panelSurface,...
-          sstDesiredFunction,windOn,sunOn,deltaAngle,timetemp,totalTime,wakeAerodynamics,masterSatellite]...
-          =cluxterInitial()
+function  [sstTemp,ns,altitude,panels,rho,Tatmos,v,radiusOfEarth,MeanMotion,mu,satelliteMass,panelSurface,...
+          sstDesiredFunction,windOn,sunOn,deltaAngle,timetemp,totalTime,wakeAerodynamics,masterSatellite,...
+          SSCoeff,SSParameters,meanAnomalyOffSet]=cluxterInitial()
 %% initial conditions for Cluxter Mission
 
 
 %% simulation time constants
-  totalTime         =2000*90*60;   %% simulation period (approximate multiples of orbit periods),[s]
+  totalTime         =30*90*60;   %% simulation period (approximate multiples of orbit periods),[s]
   compStep          =3;          %% computational step size in [s]
   lengthControlLoop =90;         %% in [s]
   timetemp  =0:compStep:lengthControlLoop; %% duration and interpolation timestep for each control loop
@@ -25,7 +25,7 @@ function  [sstTemp,ns,altitude,panels,rho,v,radiusOfEarth,MeanMotion,mu,satellit
 
   ns=3;
   satelliteMass=1.5;
-  altitude=600000;                %% [m]
+  altitude=500000;                %% [m]
   argumentOfPerigeeAtTe0=0;       %% not used yet
   trueAnomalyAtTe0=0;             %% not used yet
   ejectionVelocity=0;%0.01;          %% [m/s]
@@ -35,9 +35,15 @@ function  [sstTemp,ns,altitude,panels,rho,v,radiusOfEarth,MeanMotion,mu,satellit
   panels=[0 0 2]; 
 
   %% other constants
-  [rho,v,radiusOfEarth,mu,MeanMotion]=orbitalproperties(altitude);
+  [rho,Tatmos,v,radiusOfEarth,mu,MeanMotion,SSOinclination,J2]=orbitalproperties(altitude);
   r0=radiusOfEarth+altitude;    %% in m
+
+  inclination=SSOinclination;   %%
+  %inclination=0                %% manualinclination
   
+  SSCoeff=sqrt(1+3*J2*radiusOfEarth^2/8/r0^2*(1+3*cosd(2*inclination)))^J2On 
+   
+  %% initial conditions
   sstTemp=zeros(9,ns,size(timetemp,2));
   for i=1:ns
       sstTemp(1,i,1)=(i-1)*ejectionVelocity*timeBetweenEjections; %% x position
@@ -46,6 +52,36 @@ function  [sstTemp,ns,altitude,panels,rho,v,radiusOfEarth,MeanMotion,mu,satellit
       sstTemp(8,i,1)=0;           %% beta
       sstTemp(9,i,1)=0;           %% gamma
   end
+  
+  %% parameters for desired conditions  
+  meanAnomalyOffSet=0;% %% for 0 satellite cross on the poles; for pi/2 satellite crosses at equator
+  numberOfModes=10;
+  SSParameters=zeros(6,ns,numberOfModes);
+  Aold=7; Dold=15;
+
+  %% generalized analytical solution, from Traub with variable renaming and accounting for different coordinate system, accelerations do not belong here
+  SSParameters(1,1,1)=0;     %%
+  SSParameters(2,1,1)=-Dold;     %%
+  SSParameters(3,1,1)=0;     %%
+  SSParameters(4,1,1)=0;     %%
+  SSParameters(5,1,1)=0;     %%
+  SSParameters(6,1,1)=0;     %%
+
+SSParameters(1,2,1)=2*Aold;     %% xmax
+SSParameters(2,2,1)=0;              %% xpermanent.only here, could assume any value
+SSParameters(3,2,1)=Aold*sqrt(3);   %% ymax
+SSParameters(4,2,1)=0;              %% ymaxdot0
+SSParameters(5,2,1)=0;%Aold;           %% zmax
+SSParameters(6,2,1)=0;              %% zpermanent, it is a permanent nadir-zenit movement should always be zero because it implies a permant ram-antiram movement. should this ever be non-zero, all has to be verified
+
+  SSParameters(1,3,1)=0;     %%
+  SSParameters(2,3,1)=Dold;     %%
+  SSParameters(3,3,1)=0;     %%
+  SSParameters(4,3,1)=0;     %%
+  SSParameters(5,3,1)=0;     %%
+  SSParameters(6,3,1)=0;     %%
+
+  
 end
 
 

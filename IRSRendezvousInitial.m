@@ -1,6 +1,6 @@
-function [sstTemp,ns,altitude,panels,rho,v,radiusOfEarth,MeanMotion,mu,satelliteMass,panelSurface,...
-  sstDesiredFunction,windOn,sunOn,deltaAngle,timetemp,totalTime,wakeAerodynamics,masterSatellite]...
-  =IRSRendezvousInitial()
+function [sstTemp,ns,altitude,panels,rho,Tatmos,v,radiusOfEarth,MeanMotion,mu,satelliteMass,panelSurface,...
+  sstDesiredFunction,windOn,sunOn,deltaAngle,timetemp,totalTime,wakeAerodynamics,masterSatellite,...
+  SSCoeff,SSParameters,meanAnomalyOffSet]=IRSRendezvousInitial()
 % initial conditions for IRS's Discoverers mission:
 % r0=6778.137         %% km
 % inclinition=10;     %% degree
@@ -37,13 +37,24 @@ function [sstTemp,ns,altitude,panels,rho,v,radiusOfEarth,MeanMotion,mu,satellite
   argumentOfPerigeeAtTe0=0;     %% not used yet
   trueAnomalyAtTe0=0;           %% not used yet
   %% other constants
-  [~,~,radiusOfEarth,~,~]=orbitalproperties(500000); %% fake value is passed to get the physics value only
-  altitude=6778137-radiusOfEarth;
-  [rho,v,radiusOfEarth,mu,MeanMotion]=orbitalproperties(altitude);
+  [~,~,radiusOfEarth,~,~,~,~]=orbitalproperties(500000); %% fake altitude value is passed to get the physics value only
+  r0=6778137;       %% radius of orbit as per Traub publication
+  altitude=r0-radiusOfEarth;
+  [rho,Tatmos,v,radiusOfEarth,mu,MeanMotion,SSOinclination,J2]=orbitalproperties(altitude);  
+  inclination=SSOinclination;   %%
+  %inclination=0                %% manualinclination
   
+  SSCoeff=sqrt(1+3*J2*radiusOfEarth^2/8/r0^2*(1+3*cosd(2*inclination))) ;
+
   %% satelliteshapeproperties, number of 10cmx10cm faces to x,y,z(body coordinates, normally aligned with):
   panels=[0 0 2]; 
   panelSurface=1.1;                %% [m^2]  
   %% initial condition
   sstTemp=zeros(9,ns,size(timetemp,2));
+
+  %% parameters for desired conditions  
+  meanAnomalyOffSet=pi/4; %% for pi/2 satellite cross on the poles; for 0 satellite crosses at equator 
+  numberOfModes=10;
+  SSParameters=zeros(6,ns,numberOfModes);
+
 end

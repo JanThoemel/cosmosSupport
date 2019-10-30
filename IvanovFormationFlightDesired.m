@@ -1,8 +1,10 @@
-function [sstDesired]=IvanovFormationFlightDesired(time,meanMotion,i,mode)
+function [sstDesired]=IvanovFormationFlightDesired(time,meanMotion,i,goFoFli,SSCoeff,SSParameters,meanAnomalyOffSet)
 %% desired solution for Ivanov
+%! change this to use the generalized formulation as in cluxterDesired
+
   sstDesired=zeros(9,1,size(time,2));
   %% analytical solution according to Ivanov
-  switch mode
+  switch goFoFli
     case 1
       A=100;    D=115;
     case 2

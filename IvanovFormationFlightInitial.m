@@ -1,6 +1,6 @@
-function [sstTemp,ns,altitude,panels,rho,v,radiusOfEarth,meanMotion,mu,satelliteMass,panelSurface,...
-          sstDesiredFunction,windOn,sunOn,deltaAngle,timetemp,totalTime,wakeAerodynamics,masterSatellite]...
-          =IvanovFormationFlightInitial()
+function [sstTemp,ns,altitude,panels,rho,Tatmos,v,radiusOfEarth,meanMotion,mu,satelliteMass,panelSurface,...
+          sstDesiredFunction,windOn,sunOn,deltaAngle,timetemp,totalTime,wakeAerodynamics,masterSatellite,...
+          SSCoeff,SSParameters,meanAnomalyOffSet]=IvanovFormationFlightInitial()
 %% initial conditions for Ivanov
 
   totalTime         =50*90*60;   %% simulation period (approximate multiples of orbit periods),[s]
@@ -25,8 +25,14 @@ function [sstTemp,ns,altitude,panels,rho,v,radiusOfEarth,meanMotion,mu,satellite
   panelSurface=0.01;              %% m^2  
 
   %% other constants
-  [rho,v,radiusOfEarth,mu,meanMotion]=orbitalproperties(altitude);
-  r0=radiusOfEarth+altitude;    %% in m
+  [rho,Tatmos,v,radiusOfEarth,mu,meanMotion,~]=orbitalproperties(altitude);
+  r0=radiusOfEarth+altitude;    %% [m]
+  inclination=SSOinclination;   %%
+  %inclination=0                %% manualinclination
+  
+  SSCoeff=sqrt(1+3*J2*radiusOfEarth^2/8/r0^2*(1+3*cosd(2*inclination))) ;
+
+  
   panels=[0 0 2]; 
   sstTemp=zeros(9,ns,size(timetemp,2));
   for i=2:ns
@@ -36,4 +42,13 @@ function [sstTemp,ns,altitude,panels,rho,v,radiusOfEarth,meanMotion,mu,satellite
       sstTemp(8,i,1)=0;           %% beta
       sstTemp(9,i,1)=0;           %% gamma
   end
+  
+  %% parameters for desired conditions  
+  meanAnomalyOffSet=pi/4; %% for pi/2 satellite cross on the poles; for 0 satellite crosses at equator 
+  numberOfModes=10;
+  SSParameters=zeros(6,ns,numberOfModes);
+
+  
+  
+  
 end

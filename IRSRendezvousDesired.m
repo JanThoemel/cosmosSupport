@@ -1,5 +1,6 @@
-function [sstDesired]=IRSRendezvousDesired(timetemptemp,~,i,goFoFli)
+function [sstDesired]=IRSRendezvousDesired(timetemptemp,~,i,goFoFli,SSCoeff,SSParameters,meanAnomalyOffSet)
 %% desired IRS rendezvous solution
+%! change this to use the generalized formulation as in cluxterDesired
   startSecondPhase=2*90*60;             %% [s]
   sstDesired=zeros(9,1,size(timetemptemp,2));
 
