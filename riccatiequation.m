@@ -1,4 +1,18 @@
 function [P,IR,A,B]=riccatiequation(meanMotion)
+%%  input variables
+%%  -meanMotion     mean motion as defined as Keplerian element, [rad/s], double
+%%  output variables
+%%  -P
+%%  -IR
+%%  -A
+%%  -B
+%%  internal variables
+%%  -R
+%%  -Q
+%%  -E
+%%  -Z
+
+
   %R=diag([1e-13 1e-14 1e-14]); %% this is R given in Ivanov's IAC paper. It seems to be wrong
   %R=diag([1e6 1e6 1e6]);       %%
   %R=diag([1e9 1e9 1e9]);       %%

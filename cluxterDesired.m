@@ -2,7 +2,7 @@ function sstDesired=cluxterDesired(time,meanMotion,i,goFoFli)
 %% cluxterDesired does ....
 %% input variables:
 %% time             = time variable, used only for formation reconfiguration [s], double
-%% meanMotion       = mean motion [rad/s], double
+%% meanMotion       = mean motion [rad/s], double %% this should be [deg/s] in the future
 %% i                = which satellite number in formation, int
 %% goFoFli          = switch, used only in X
 %% output variables:
