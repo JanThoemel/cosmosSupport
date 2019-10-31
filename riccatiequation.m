@@ -1,4 +1,8 @@
 function [P,IR,A,B]=riccatiequation(meanMotion,SSCoeff)
+%% according to:
+%% C. Traub, G. H. Herdrich, and S. Fasoulas, “Influence of energy accommodation on a robust spacecraft rendezvous maneuver using differential aerodynamic forces,” CEAS Sp. J., 2019.
+%% but with Ivanov's coordinate system and variable renaming
+
 %%  input variables
 %%  -meanMotion     mean motion as defined as Keplerian element, [rad/s], double %% should be in [deg]
 %%  output variables
@@ -33,11 +37,20 @@ function [P,IR,A,B]=riccatiequation(meanMotion,SSCoeff)
   Q=eye(6);
   E=eye(3);
   Z=zeros(3,3);
-  C=[0 0 0; 0 -meanMotion^2 0;0 0 3*meanMotion^2];
-  D=[0 0 -2*meanMotion;0 0 0;2*meanMotion 0 0];
+  
+ C=[0 0                       0;
+    0 -(3*SSCoeff^2-2)*meanMotion^2 0;
+    0 0             (5*SSCoeff^2-2)*meanMotion^2];
+  
+  D=[0                    0 -2*meanMotion*SSCoeff ;
+     0                    0 0;
+     2*meanMotion*SSCoeff 0 0];
 
-  A=[Z E; C D];
-  B=[Z;E];
+  A=[Z E;
+     C D];
+   
+  B=[Z;
+     E];
   IR=inv(R);
   %%https://nl.mathworks.com/help/control/ref/care.html
   %% the function care is replaced by icare in later matlab versions

@@ -1,5 +1,10 @@
 function sstDesired=cluxterDesired(time,meanMotion,i,goFoFli,SSCoeff,SSParameters,meanAnomalyOffSet)
 %% cluxterDesired does ....
+%% it follows the principles of 
+%% C. Traub et al., “On the exploitation of differential aerodynamic lift and drag as a means to
+%% control satellite formation flight,” CEAS Sp. J., 2019
+%% but renames variables and uses Ivanov's coordinate system (x-ram,y-orbital plane vector,z-zenith)
+
 %% input variables:
 %% time             = time variable, used only for formation reconfiguration [s], double
 %% meanMotion       = mean motion [rad/s], double %% this should be [deg/s] in the future

@@ -1,6 +1,6 @@
 function [sstTemp,ns,altitude,panels,rho,Tatmos,v,radiusOfEarth,meanMotion,mu,satelliteMass,panelSurface,...
           sstDesiredFunction,windOn,sunOn,deltaAngle,timetemp,totalTime,wakeAerodynamics,masterSatellite,...
-          SSCoeff,SSParameters,meanAnomalyOffSet]=IvanovFormationFlightInitial()
+          SSCoeff,inclination,SSParameters,meanAnomalyOffSet]=IvanovFormationFlightInitial()
 %% initial conditions for Ivanov
 
   totalTime         =50*90*60;   %% simulation period (approximate multiples of orbit periods),[s]

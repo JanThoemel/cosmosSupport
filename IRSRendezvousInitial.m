@@ -1,6 +1,6 @@
 function [sstTemp,ns,altitude,panels,rho,Tatmos,v,radiusOfEarth,MeanMotion,mu,satelliteMass,panelSurface,...
   sstDesiredFunction,windOn,sunOn,deltaAngle,timetemp,totalTime,wakeAerodynamics,masterSatellite,...
-  SSCoeff,SSParameters,meanAnomalyOffSet]=IRSRendezvousInitial()
+  SSCoeff,inclination,SSParameters,meanAnomalyOffSet]=IRSRendezvousInitial()
 % initial conditions for IRS's Discoverers mission:
 % r0=6778.137         %% km
 % inclinition=10;     %% degree

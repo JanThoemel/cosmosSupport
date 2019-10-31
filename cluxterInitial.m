@@ -1,7 +1,11 @@
 function  [sstTemp,ns,altitude,panels,rho,Tatmos,v,radiusOfEarth,MeanMotion,mu,satelliteMass,panelSurface,...
           sstDesiredFunction,windOn,sunOn,deltaAngle,timetemp,totalTime,wakeAerodynamics,masterSatellite,...
-          SSCoeff,SSParameters,meanAnomalyOffSet]=cluxterInitial()
+          SSCoeff,inclination,SSParameters,meanAnomalyOffSet]=cluxterInitial()
 %% initial conditions for Cluxter Mission
+%% it follows the principles of 
+%% C. Traub et al., “On the exploitation of differential aerodynamic lift and drag as a means to
+%% control satellite formation flight,” CEAS Sp. J., 2019
+%% but renames variables and uses Ivanov's coordinate system (x-ram,y-orbital plane vector,z-zenith)
 
 
 %% simulation time constants
@@ -17,7 +21,7 @@ function  [sstTemp,ns,altitude,panels,rho,Tatmos,v,radiusOfEarth,MeanMotion,mu,s
   sstDesiredFunction=@cluxterDesired;
   windOn       =1;
   sunOn        =1;
-  J2On         =0; %% not yet implemented
+  J2On         =0; 
   if sunOn
     fprintf('\n only dusk-dawn orbits for the time being! Arbitrary orbits require rotation of sunlight vector and accounting for eclipse\n');
   end
@@ -39,9 +43,9 @@ function  [sstTemp,ns,altitude,panels,rho,Tatmos,v,radiusOfEarth,MeanMotion,mu,s
   r0=radiusOfEarth+altitude;    %% in m
 
   inclination=SSOinclination;   %%
-  %inclination=0                %% manualinclination
+  %inclination=90               %% manual inclination if 90 or 0 deg SSCoeff is 1, no J2 effects are experienced
   
-  SSCoeff=sqrt(1+3*J2*radiusOfEarth^2/8/r0^2*(1+3*cosd(2*inclination)))^J2On; 
+  SSCoeff=sqrt(1+3*J2*radiusOfEarth^2/8/r0^2*(1+3*cosd(2*inclination)))^J2On; %% J2On is 0, i.e. the effect shall not be taking into account then SSCoeff is zero
    
   %% initial conditions
   sstTemp=zeros(9,ns,size(timetemp,2));
