@@ -1,6 +1,6 @@
 function  [sstTemp,ns,altitude,panels,rho,Tatmos,v,radiusOfEarth,MeanMotion,mu,satelliteMass,panelSurface,...
           sstDesiredFunction,windOn,sunOn,deltaAngle,timetemp,totalTime,wakeAerodynamics,masterSatellite,...
-          SSCoeff,inclination,SSParameters,meanAnomalyOffSet]=cluxterInitial()
+          SSCoeff,inclination,SSParameters,meanAnomalyOffSet]=cluxterInitial(altitude,sunOn)
 %% initial conditions for Cluxter Mission
 %% it follows the principles of 
 %% C. Traub et al., “On the exploitation of differential aerodynamic lift and drag as a means to
@@ -9,14 +9,13 @@ function  [sstTemp,ns,altitude,panels,rho,Tatmos,v,radiusOfEarth,MeanMotion,mu,s
 
 
 %% simulation time constants
-  totalTime         =30*90*60;   %% simulation period (approximate multiples of orbit periods),[s]
+  totalTime         =100*90*60;   %% simulation period (approximate multiples of orbit periods),[s]
   compStep          =3;          %% computational step size in [s]
   lengthControlLoop =90;         %% in [s]
   timetemp  =0:compStep:lengthControlLoop; %% duration and interpolation timestep for each control loop
   %fprintf('\nnumber of float variables for each control loop: %d, size %f kbyte',size(timetemp,2)*(1+6+6+3)+6+1,(size(timetemp,2)*(1+6+6+3)+6+1)*4/1024); %% size of time vector, state vector, desired state vector and anglevector, C and MeanMotion of analytical solution
   wakeAerodynamics=0;             %% use of wake aerodynamics
-  masterSatellite=0;              %% if 0 no master, 1 active master, 2 passive master,
-
+  masterSatellite=2;              %% if 0 no master, 1 active master, 2 passive master,
 
   sstDesiredFunction=@cluxterDesired;
   windOn       =1;
@@ -27,9 +26,10 @@ function  [sstTemp,ns,altitude,panels,rho,Tatmos,v,radiusOfEarth,MeanMotion,mu,s
   end
   deltaAngle   =30;                   %% roll,pitch,yaw angle resolution
 
-  ns=3;
+  ns=4;
   satelliteMass=1.5;
-  altitude=500000;                %% [m]
+  altitude=650e3;                 %% [m] 
+  
   argumentOfPerigeeAtTe0=0;       %% not used yet
   trueAnomalyAtTe0=0;             %% not used yet
   ejectionVelocity=0;%0.01;          %% [m/s]
@@ -50,42 +50,55 @@ function  [sstTemp,ns,altitude,panels,rho,Tatmos,v,radiusOfEarth,MeanMotion,mu,s
   %% initial conditions
   sstTemp=zeros(9,ns,size(timetemp,2));
   for i=1:ns
-      sstTemp(1,i,1)=(i-1)*ejectionVelocity*timeBetweenEjections; %% x position
-      sstTemp(4,i,1)=0;           %% u velocity
-      sstTemp(7,i,1)=0;           %% alpha
-      sstTemp(8,i,1)=0;           %% beta
-      sstTemp(9,i,1)=0;           %% gamma
+    sstTemp(1,i,1)=(i-1)*ejectionVelocity*timeBetweenEjections; %% x position
+    sstTemp(4,i,1)=0;           %% u velocity
+    sstTemp(7,i,1)=0;           %% alpha
+    sstTemp(8,i,1)=0;           %% beta
+    sstTemp(9,i,1)=0;           %% gamma
   end
   
   %% parameters for desired conditions  
   meanAnomalyOffSet=0;% %% for 0 satellite cross on the poles; for pi/2 satellite crosses at equator
   numberOfModes=10;
-  SSParameters=zeros(6,ns,numberOfModes);
-  Aold=7; Dold=15;
+  SSParameters=zeros(8,ns,numberOfModes);
+  Aold=3; Dold=10;
 
   %% generalized analytical solution, from Traub with variable renaming and accounting for different coordinate system, accelerations do not belong here
-  SSParameters(1,1,1)=0;     %%
-  SSParameters(2,1,1)=-Dold;     %%
-  SSParameters(3,1,1)=0;     %%
-  SSParameters(4,1,1)=0;     %%
-  SSParameters(5,1,1)=0;     %%
-  SSParameters(6,1,1)=0;     %%
+  SSParameters(1,1,1)=0;            %%
+  SSParameters(2,1,1)=0;        %%
+  SSParameters(3,1,1)=0;            %%
+  SSParameters(4,1,1)=0;            %%
+  SSParameters(5,1,1)=0;            %%
+  SSParameters(6,1,1)=0;            %%
+  SSParameters(7,1,1)=0;            %%
+  SSParameters(8,1,1)=0;            %%  
 
-  SSParameters(1,2,1)=2*Aold;     %% xmax
-  SSParameters(2,2,1)=0;              %% xpermanent.only here, could assume any value
-  SSParameters(3,2,1)=Aold*sqrt(3);   %% ymax
-  SSParameters(4,2,1)=0;              %% ymaxdot0
-  SSParameters(5,2,1)=0;%Aold;           %% zmax
-  SSParameters(6,2,1)=0;              %% zpermanent, it is a permanent nadir-zenit movement should always be zero because it implies a permant ram-antiram movement. should this ever be non-zero, all has to be verified
+  SSParameters(1,2,1)=0;            %%
+  SSParameters(2,2,1)=Dold;        %%
+  SSParameters(3,2,1)=0;            %%
+  SSParameters(4,2,1)=0;            %%
+  SSParameters(5,2,1)=0;            %%
+  SSParameters(6,2,1)=0;            %%
+  SSParameters(7,2,1)=0;            %%
+  SSParameters(8,2,1)=0;            %%  
 
-  SSParameters(1,3,1)=0;     %%
-  SSParameters(2,3,1)=Dold;     %%
-  SSParameters(3,3,1)=0;     %%
-  SSParameters(4,3,1)=0;     %%
-  SSParameters(5,3,1)=0;     %%
-  SSParameters(6,3,1)=0;     %%
+  SSParameters(1,3,1)=Aold;         %% xmax (beta)
+  SSParameters(2,3,1)=-2*Dold;            %% xpermanent.only here, could assume any value
+  SSParameters(3,3,1)=Aold;         %% ymax
+  SSParameters(4,3,1)=0;            %% ymaxdot0
+  SSParameters(5,3,1)=0;            %% zmax (alpha)
+  SSParameters(6,3,1)=0;            %% zpermanent, it is a permanent nadir-zenit movement should always be zero because it implies a permant ram-antiram movement. should this ever be non-zero, all has to be verified
+  SSParameters(7,3,1)=0;            %% xz offset (not mentioned in Traub but in Ivanov)
+  SSParameters(8,3,1)=0;            %% y offset  (not mentioned in Traub but in Ivanov)
 
-  
+  SSParameters(1,4,1)=0;            %%
+  SSParameters(2,4,1)=-3*Dold;         %%
+  SSParameters(3,4,1)=0;            %%
+  SSParameters(4,4,1)=0;            %%
+  SSParameters(5,4,1)=0;            %%
+  SSParameters(6,4,1)=0;            %%
+  SSParameters(7,4,1)=0;            %%
+  SSParameters(8,4,1)=0;            %%  
 end
 
 

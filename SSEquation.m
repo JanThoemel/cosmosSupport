@@ -1,8 +1,7 @@
-function  [ssttemptemp,controlVector]=SSEquation(IR,P,A,B,deltat,sst0,e,windPressure,...
+function  [sstTemp0,controlVector]=SSEquation(IR,P,A,B,deltat,sst0,e,windPressure,...
           solarPressure,alphas,betas,gammas,aeropressureforcevector,solarpressureforcevector,...
           oldAlphaOpt,oldBetaOpt,oldGammaOpt,refSurf,satelliteMass,wakeAerodynamics,masterSatellite,...
           currentTime0,radiusOfEarth,altitude,meanMotion)
-
 %% was: HCWequation, Hill-Clohessy-Wiltshire equation
 %% now: Schweighart and Sedwick equation (accounting for J2, if J2 is set to zero, we end up in the Hill-Clohessy-Wiltshire equations)
 %% this function is doing X
@@ -41,12 +40,17 @@ function  [ssttemptemp,controlVector]=SSEquation(IR,P,A,B,deltat,sst0,e,windPres
   usedTotalForceVector=zeros(3,size(alphas,2),size(betas,2),size(gammas,2));
   rotatedSunForceVector=zeros(3,size(alphas,2),size(betas,2),size(gammas,2));
 
-  %% compute control vector
-  controlVector=-IR*B'*P*e;
+  %%
+  wind          =windPressure* [-1 0 0]';
+  sunlight      =solarPressure*[0 -1 0]';       %% for dusk-dawn orbit 
 
+  %% compute control vector
+  controlVector=-IR*B'*P*e;  
   solarForceVectorOfMaster=[0 0 0]';
   maxSolarForce=[0 0 0]';
 
+  forceOnMaster=0.5*2.8*(wind+sunlight)*refSurf;
+  
   rotatedSunForceVector=solarpressureforcevector;
 %{
   %% rotate sunforcevector if necessary
@@ -102,7 +106,12 @@ function  [ssttemptemp,controlVector]=SSEquation(IR,P,A,B,deltat,sst0,e,windPres
     for k=1:size(gammas,2)
       for j=1:size(betas,2)
         for i=1:size(alphas,2)
-          usedTotalForceVector(:,i,j,k)=aeropressureforcevector(:,i,j,k)+rotatedSunForceVector(:,i,j,k)-forceVectorOfMaster(:);
+          %usedTotalForceVector(:,i,j,k)=aeropressureforcevector(:,i,j,k)+rotatedSunForceVector(:,i,j,k)-forceVectorOfMaster(:);
+          usedTotalForceVector(:,i,j,k)=aeropressureforcevector(:,i,j,k)+solarpressureforcevector(:,i,j,k)-forceOnMaster(:);
+          %norm(aeropressureforcevector(:,i,j,k))
+          %norm(solarpressureforcevector(:,i,j,k))
+          %norm(forceOnMaster(:))
+          %pause
         end
       end
     end
@@ -113,9 +122,12 @@ function  [ssttemptemp,controlVector]=SSEquation(IR,P,A,B,deltat,sst0,e,windPres
 
   [forceVector,alphaOpt,betaOpt,gammaOpt]=findBestAttitude(usedTotalForceVector,controlVector,alphas,betas,gammas,oldAlphaOpt,oldBetaOpt,oldGammaOpt);
   %% solve ODE with backward Euler step
-  ssttemptemp(1:6)=(A*sst0(1:6)+B*forceVector/satelliteMass)*deltat+sst0(1:6); 
- 
-  ssttemptemp(7:9)=[alphaOpt betaOpt gammaOpt]';
-  %fprintf('f')
- % forceVector'
+  sstTemp0(1:6)=(A*sst0(1:6)+B*forceVector/satelliteMass)*deltat+sst0(1:6); 
+  sstTemp0(7:9)=[alphaOpt betaOpt gammaOpt]';
+  %sstTemp0
+
+  %fprintf('\n f/c %f',norm(forceVector)/norm(controlVector'*satelliteMass)); 
+  %fprintf('\n f %1.3e',norm(forceVector)); 
+  %fprintf('\n c %1.3e',norm(controlVector'*satelliteMass)); 
+  %input('');
 end

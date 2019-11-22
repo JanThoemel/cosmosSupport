@@ -25,7 +25,9 @@ function [sstTemp,ns,altitude,panels,rho,Tatmos,v,radiusOfEarth,meanMotion,mu,sa
   panelSurface=0.01;              %% m^2  
 
   %% other constants
-  [rho,Tatmos,v,radiusOfEarth,mu,meanMotion,~]=orbitalproperties(altitude);
+  %[rho,Tatmos,v,radiusOfEarth,mu,meanMotion,~]=orbitalproperties(altitude);
+  [rho,Tatmos,v,radiusOfEarth,mu,MeanMotion,SSOinclination,J2]=orbitalproperties(altitude);
+
   r0=radiusOfEarth+altitude;    %% [m]
   inclination=SSOinclination;   %%
   %inclination=0                %% manualinclination

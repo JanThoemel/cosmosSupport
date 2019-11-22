@@ -16,7 +16,7 @@ function [forceVector,alphaOpt,betaOpt,gammaOpt]=findBestAttitude(totalForceVect
 %% betaOpt
 %% gammaOpt
 
-  thetaRange=45;
+  thetaRange=90;
   %% is this a universally good thetaRange?
   %% What is the relation to angle granularity?
   %% Do we need a formula like 1.5xgranularity,
@@ -28,8 +28,14 @@ function [forceVector,alphaOpt,betaOpt,gammaOpt]=findBestAttitude(totalForceVect
   for k=1:size(gammas,2) %% yaw
     for j=1:size(betas,2) %% pitch
       for i=1:size(alphas,2) %% roll
+        
+        %totalForceVector(:,i,j,k)'/norm(totalForceVector(:,i,j,k))
+        %controlVector'/norm(controlVector)
         [theta(i,j,k),phi(i,j,k)]=thetaphi(totalForceVector(:,i,j,k)/norm(totalForceVector(:,i,j,k)),controlVector/norm(controlVector));        
+        %theta(i,j,k)
+        %phi(i,j,k)
         if theta(i,j,k)<thetaRange %% find all force vectors that have theta<thetarange deg
+          %fprintf('-x-\n')
           goodTheta(l)=theta(i,j,k);
           goodThetai(l)=i;
           goodThetaj(l)=j;
@@ -41,6 +47,7 @@ function [forceVector,alphaOpt,betaOpt,gammaOpt]=findBestAttitude(totalForceVect
           meritFactor(l)=1000/(  (1e-5+abs(theta(i,j,k)))  *    (1+wrapTo360(oldAlphaOpt-alphas(i)))  *(1+wrapTo360(oldBetaOpt-betas(j))) * (1+wrapTo360(oldGammaOpt-gammas(k))) );
           l=l+1;
         end
+        %input('xxx')
       end
     end
   end
@@ -53,8 +60,8 @@ function [forceVector,alphaOpt,betaOpt,gammaOpt]=findBestAttitude(totalForceVect
     kk=find(gammas==oldGammaOpt);
     ii=1;jj=1;kk=1;
     forceVector=squeeze(totalForceVector(:,ii,jj,kk));
-    %controlVector
-    %forceVector
+    %controlVector/norm(controlVector)
+    %forceVector/norm(forceVector)
     %fprintf('\n findBestAerodynamicAngles: problem with theta\n')
     %input('')
   elseif oldAlphaOpt==0 && oldBetaOpt==0 && oldGammaOpt==0
