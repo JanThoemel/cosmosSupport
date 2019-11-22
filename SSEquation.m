@@ -51,6 +51,7 @@ function  [sstTemp0,controlVector]=SSEquation(IR,P,A,B,deltat,sst0,e,windPressur
 
   forceOnMaster=0.5*2.8*(wind+sunlight)*refSurf;
   
+  %% sunlight rotation will be important for non dusk-dawn orbits
   rotatedSunForceVector=solarpressureforcevector;
 %{
   %% rotate sunforcevector if necessary
@@ -72,8 +73,6 @@ function  [sstTemp0,controlVector]=SSEquation(IR,P,A,B,deltat,sst0,e,windPressur
   %}
   
   if masterSatellite==0 %% no master satellite
-    %aeropressureforcevector
-    %rotatedSunForceVector
     for k=1:size(gammas,2)
       for j=1:size(betas,2)
         for i=1:size(alphas,2)
@@ -106,12 +105,7 @@ function  [sstTemp0,controlVector]=SSEquation(IR,P,A,B,deltat,sst0,e,windPressur
     for k=1:size(gammas,2)
       for j=1:size(betas,2)
         for i=1:size(alphas,2)
-          %usedTotalForceVector(:,i,j,k)=aeropressureforcevector(:,i,j,k)+rotatedSunForceVector(:,i,j,k)-forceVectorOfMaster(:);
           usedTotalForceVector(:,i,j,k)=aeropressureforcevector(:,i,j,k)+solarpressureforcevector(:,i,j,k)-forceOnMaster(:);
-          %norm(aeropressureforcevector(:,i,j,k))
-          %norm(solarpressureforcevector(:,i,j,k))
-          %norm(forceOnMaster(:))
-          %pause
         end
       end
     end
@@ -124,10 +118,5 @@ function  [sstTemp0,controlVector]=SSEquation(IR,P,A,B,deltat,sst0,e,windPressur
   %% solve ODE with backward Euler step
   sstTemp0(1:6)=(A*sst0(1:6)+B*forceVector/satelliteMass)*deltat+sst0(1:6); 
   sstTemp0(7:9)=[alphaOpt betaOpt gammaOpt]';
-  %sstTemp0
 
-  %fprintf('\n f/c %f',norm(forceVector)/norm(controlVector'*satelliteMass)); 
-  %fprintf('\n f %1.3e',norm(forceVector)); 
-  %fprintf('\n c %1.3e',norm(controlVector'*satelliteMass)); 
-  %input('');
 end

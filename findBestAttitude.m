@@ -16,7 +16,7 @@ function [forceVector,alphaOpt,betaOpt,gammaOpt]=findBestAttitude(totalForceVect
 %% betaOpt
 %% gammaOpt
 
-  thetaRange=90;
+  thetaRange=45;
   %% is this a universally good thetaRange?
   %% What is the relation to angle granularity?
   %% Do we need a formula like 1.5xgranularity,

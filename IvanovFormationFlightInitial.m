@@ -3,8 +3,9 @@ function [sstTemp,ns,altitude,panels,rho,Tatmos,v,radiusOfEarth,meanMotion,mu,sa
           SSCoeff,inclination,SSParameters,meanAnomalyOffSet]=IvanovFormationFlightInitial()
 %% initial conditions for Ivanov
 
-  totalTime         =50*90*60;   %% simulation period (approximate multiples of orbit periods),[s]
-  compStep          =9;          %% computational step size in [s]
+  
+  totalTime         =5*90*60;   %% simulation period (approximate multiples of orbit periods),[s], it is not relevant for cosmosFS
+  compStep          =3;          %% computational step size in [s]
   lengthControlLoop =90;         %% in [s]
   timetemp  =0:compStep:lengthControlLoop; %% duration and interpolation timestep for each control loop
   wakeAerodynamics=0;             %% use of wake aerodynamics
@@ -26,14 +27,14 @@ function [sstTemp,ns,altitude,panels,rho,Tatmos,v,radiusOfEarth,meanMotion,mu,sa
 
   %% other constants
   %[rho,Tatmos,v,radiusOfEarth,mu,meanMotion,~]=orbitalproperties(altitude);
-  [rho,Tatmos,v,radiusOfEarth,mu,meanMotion,SSOinclination,J2]=orbitalproperties(altitude);
+  [rho,Tatmos,v,radiusOfEarth,mu,meanMotion,SSOinclination,~]=orbitalproperties(altitude);
 
   r0=radiusOfEarth+altitude;    %% [m]
   inclination=SSOinclination;   %%
   %inclination=0                %% manualinclination
   
-  SSCoeff=sqrt(1+3*J2*radiusOfEarth^2/8/r0^2*(1+3*cosd(2*inclination))) ;
-
+  SSCoeff=1;%sqrt(1+3*J2*radiusOfEarth^2/8/r0^2*(1+3*cosd(2*inclination))) ;
+  
   
   panels=[0 0 2]; 
   sstTemp=zeros(9,ns,size(timetemp,2));
