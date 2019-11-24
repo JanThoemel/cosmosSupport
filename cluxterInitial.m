@@ -9,26 +9,26 @@ function  [sstTemp,ns,altitude,panels,rho,Tatmos,v,radiusOfEarth,MeanMotion,mu,s
 
 
 %% simulation time constants
-  totalTime         =100*90*60;   %% simulation period (approximate multiples of orbit periods),[s]
-  compStep          =3;          %% computational step size in [s]
+  totalTime         =50*90*60;   %% simulation period (approximate multiples of orbit periods),[s]
+  compStep          =9;          %% computational step size in [s]
   lengthControlLoop =90;         %% in [s]
   timetemp  =0:compStep:lengthControlLoop; %% duration and interpolation timestep for each control loop
   %fprintf('\nnumber of float variables for each control loop: %d, size %f kbyte',size(timetemp,2)*(1+6+6+3)+6+1,(size(timetemp,2)*(1+6+6+3)+6+1)*4/1024); %% size of time vector, state vector, desired state vector and anglevector, C and MeanMotion of analytical solution
   wakeAerodynamics=0;             %% use of wake aerodynamics
-  masterSatellite=2;              %% if 0 no master, 1 active master, 2 passive master,
+  masterSatellite=0;              %% if 0 no master, 1 active master, 2 passive master,
 
   sstDesiredFunction=@cluxterDesired;
   windOn       =1;
-  sunOn        =1;
+  sunOn        =0;
   J2On         =0; 
   if sunOn
     fprintf('\n only dusk-dawn orbits for the time being! Arbitrary orbits require rotation of sunlight vector and accounting for eclipse\n');
   end
-  deltaAngle   =30;                   %% roll,pitch,yaw angle resolution
+  deltaAngle   =45;                   %% roll,pitch,yaw angle resolution
 
-  ns=4;
+  ns=3;
   satelliteMass=1.5;
-  altitude=650e3;                 %% [m] 
+  altitude=340e3;                 %% [m] 
   
   argumentOfPerigeeAtTe0=0;       %% not used yet
   trueAnomalyAtTe0=0;             %% not used yet
@@ -40,6 +40,7 @@ function  [sstTemp,ns,altitude,panels,rho,Tatmos,v,radiusOfEarth,MeanMotion,mu,s
 
   %% other constants
   [rho,Tatmos,v,radiusOfEarth,mu,MeanMotion,SSOinclination,J2]=orbitalproperties(altitude);
+  
   r0=radiusOfEarth+altitude;    %% in m
 
   inclination=SSOinclination;   %%
@@ -64,41 +65,44 @@ function  [sstTemp,ns,altitude,panels,rho,Tatmos,v,radiusOfEarth,MeanMotion,mu,s
   Aold=3; Dold=10;
 
   %% generalized analytical solution, from Traub with variable renaming and accounting for different coordinate system, accelerations do not belong here
-  SSParameters(1,1,1)=0;            %%
-  SSParameters(2,1,1)=0;        %%
-  SSParameters(3,1,1)=0;            %%
-  SSParameters(4,1,1)=0;            %%
-  SSParameters(5,1,1)=0;            %%
-  SSParameters(6,1,1)=0;            %%
-  SSParameters(7,1,1)=0;            %%
+  i_offset=-1;
+  Dold_offset=10;
+  %{
+  SSParameters(1,1+x,1)=0;            %%
+  SSParameters(2,1+x,1)=+Dold_offset;        %%
+  SSParameters(3,1+x,1)=0;            %%
+  SSParameters(4,1+x,1)=0;            %%
+  SSParameters(5,1+x,1)=0;            %%
+  SSParameters(6,1+x,1)=0;            %%
+  SSParameters(7,1+x,1)=0;            %%
   SSParameters(8,1,1)=0;            %%  
+%}
+  SSParameters(1,2+i_offset,1)=0;            %%
+  SSParameters(2,2+i_offset,1)=-Dold+Dold_offset;        %%
+  SSParameters(3,2+i_offset,1)=0;            %%
+  SSParameters(4,2+i_offset,1)=0;            %%
+  SSParameters(5,2+i_offset,1)=0;            %%
+  SSParameters(6,2+i_offset,1)=0;            %%
+  SSParameters(7,2+i_offset,1)=0;            %%
+  SSParameters(8,2+i_offset,1)=0;            %%  
 
-  SSParameters(1,2,1)=0;            %%
-  SSParameters(2,2,1)=Dold;        %%
-  SSParameters(3,2,1)=0;            %%
-  SSParameters(4,2,1)=0;            %%
-  SSParameters(5,2,1)=0;            %%
-  SSParameters(6,2,1)=0;            %%
-  SSParameters(7,2,1)=0;            %%
-  SSParameters(8,2,1)=0;            %%  
+  SSParameters(1,3+i_offset,1)=Aold;         %% xmax (beta)
+  SSParameters(2,3+i_offset,1)=-2*Dold+Dold_offset;            %% xpermanent.only here, could assume any value
+  SSParameters(3,3+i_offset,1)=Aold;         %% ymax
+  SSParameters(4,3+i_offset,1)=0;            %% ymaxdot0
+  SSParameters(5,3+i_offset,1)=0;            %% zmax (alpha)
+  SSParameters(6,3+i_offset,1)=0;            %% zpermanent, it is a permanent nadir-zenit movement should always be zero because it implies a permant ram-antiram movement. should this ever be non-zero, all has to be verified
+  SSParameters(7,3+i_offset,1)=0;            %% xz offset (not mentioned in Traub but in Ivanov)
+  SSParameters(8,3+i_offset,1)=0;            %% y offset  (not mentioned in Traub but in Ivanov)
 
-  SSParameters(1,3,1)=Aold;         %% xmax (beta)
-  SSParameters(2,3,1)=-2*Dold;            %% xpermanent.only here, could assume any value
-  SSParameters(3,3,1)=Aold;         %% ymax
-  SSParameters(4,3,1)=0;            %% ymaxdot0
-  SSParameters(5,3,1)=0;            %% zmax (alpha)
-  SSParameters(6,3,1)=0;            %% zpermanent, it is a permanent nadir-zenit movement should always be zero because it implies a permant ram-antiram movement. should this ever be non-zero, all has to be verified
-  SSParameters(7,3,1)=0;            %% xz offset (not mentioned in Traub but in Ivanov)
-  SSParameters(8,3,1)=0;            %% y offset  (not mentioned in Traub but in Ivanov)
-
-  SSParameters(1,4,1)=0;            %%
-  SSParameters(2,4,1)=-3*Dold;         %%
-  SSParameters(3,4,1)=0;            %%
-  SSParameters(4,4,1)=0;            %%
-  SSParameters(5,4,1)=0;            %%
-  SSParameters(6,4,1)=0;            %%
-  SSParameters(7,4,1)=0;            %%
-  SSParameters(8,4,1)=0;            %%  
+  SSParameters(1,4+i_offset,1)=0;            %%
+  SSParameters(2,4+i_offset,1)=-3*Dold+Dold_offset;         %%
+  SSParameters(3,4+i_offset,1)=0;            %%
+  SSParameters(4,4+i_offset,1)=0;            %%
+  SSParameters(5,4+i_offset,1)=0;            %%
+  SSParameters(6,4+i_offset,1)=0;            %%
+  SSParameters(7,4+i_offset,1)=0;            %%
+  SSParameters(8,4+i_offset,1)=0;            %%  
 end
 
 

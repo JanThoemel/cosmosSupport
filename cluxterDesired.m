@@ -32,5 +32,5 @@ function sstDesired=cluxterDesired(time,MM,i,goFoFli,SSC,SSP,MAO)
 
     sstDesired(4,:)=            B*MM*SSP(6)       -SSP(1)*sin(sqrt(2*SSC/A)*MM*time+SSP(7)+MAO)*sqrt(2*SSC/A)*MM - SSP(5)*sqrt(2*SSC*A)*cos(sqrt(2*SSC/A)*MM*time+SSP(7)+MAO)*sqrt(2*SSC/A)*MM;
     sstDesired(5,:)=                              -SSP(3)*sin(D*MM*time+SSP(8)+MAO)*D*MM                         + SSP(4)/D/MM*         cos(D*MM*time+SSP(8)+MAO)*D*MM;
-    sstDesired(6,:)=                              -SSP(5)*sin(sqrt(2*SSC/A)*MM*time+SSP(7)+MAO)*sqrt(2*SSC*A)*MM + SSP(1)/sqrt(2*SSC/A)*cos(sqrt(2*SSC/A)*MM*time+SSP(7)+MAO)*sqrt(2*SSC/A)*MM;
+    sstDesired(6,:)=                              -SSP(5)*sin(sqrt(2*SSC/A)*MM*time+SSP(7)+MAO)*sqrt(2*SSC/A)*MM + SSP(1)/sqrt(2*SSC*A)*cos(sqrt(2*SSC/A)*MM*time+SSP(7)+MAO)*sqrt(2*SSC/A)*MM;
 end

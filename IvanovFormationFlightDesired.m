@@ -1,6 +1,18 @@
 function [sstDesired]=IvanovFormationFlightDesired(time,meanMotion,i,goFoFli,SSCoeff,SSParameters,meanAnomalyOffSet)
 %% desired solution for Ivanov
+%% input variables
+%%  time
+%%  meanMotion    = mean motion, [rad/s], double
+%%  i
+%%  goFoFli
+%%  SSCoeff
+%%  SSParameters
+%%  meanAnomalyOffSet
+%% output variables
+%%  sstDesired
+%% to do
 %! change this to use the generalized formulation as in cluxterDesired
+
   sstDesired=zeros(9,size(time,2));
   %% analytical solution according to Ivanov
   switch goFoFli
@@ -29,6 +41,5 @@ function [sstDesired]=IvanovFormationFlightDesired(time,meanMotion,i,goFoFli,SSC
       sstDesired(4,:)=2*A*       -sin(meanMotion*(time))*meanMotion;
       sstDesired(5,:)=  A*sqrt(3)*cos(meanMotion*(time)+acos(1/3))*meanMotion;
       sstDesired(6,:)=  A*        cos(meanMotion*(time))*meanMotion;
-  end
-  
+  end  
 end
