@@ -28,9 +28,7 @@ function [sstTemp,ns,altitude,panels,rho,Tatmos,v,radiusOfEarth,meanMotion,mu,sa
 %%  SSCoeff
 %%  inclination
 %%  SSParameters
-%%  meanAnomalyOffSet
-        
-        
+%%  meanAnomalyOffSet      
 
   totalTime         =50*90*60; %% simulation period (approximate multiples of orbit periods),[s], it is not relevant for cosmosFS
   compStep          =9;         %% computational step size in [s]
@@ -42,7 +40,7 @@ function [sstTemp,ns,altitude,panels,rho,Tatmos,v,radiusOfEarth,meanMotion,mu,sa
   sstDesiredFunction=@IvanovFormationFlightDesired;
   windOn            =1;
   sunOn             =0;
-  deltaAngle        =45;        %% roll,pitch,yaw angle resolution
+  deltaAngle        =30;        %% roll,pitch,yaw angle resolution
   ns                =4;
   satelliteMass     =1;
   altitude          =340e3 ;    %% [m]
@@ -57,8 +55,8 @@ function [sstTemp,ns,altitude,panels,rho,Tatmos,v,radiusOfEarth,meanMotion,mu,sa
   %[rho,Tatmos,v,radiusOfEarth,mu,meanMotion,~]=orbitalproperties(altitude);
   [rho,Tatmos,v,radiusOfEarth,mu,meanMotion,SSOinclination,~]=orbitalproperties(altitude);
   %%% meanMotion is in [rad/s]
-  %fprintf('\noriginal atmospheric density (rho) is overwritten with %1.3e Ivanovs (rho) %1.3e \n',rho,1e-11);
-  %rho=10e-11;
+  fprintf('\noriginal atmospheric density (rho) is overwritten with %1.3e Ivanovs (rho) %1.3e \n',rho,1e-11);
+  rho=10e-11;
 
   r0=radiusOfEarth+altitude;    %% [m]
   inclination=SSOinclination;   %%

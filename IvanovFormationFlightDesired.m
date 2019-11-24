@@ -19,7 +19,7 @@ function [sstDesired]=IvanovFormationFlightDesired(time,meanMotion,i,goFoFli,SSC
     case 1
       A=100;    D=115;
     case 2
-      factor=2;
+      factor=1000;
       A=factor*100;    D=factor*115;
   end
   switch i

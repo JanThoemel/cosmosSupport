@@ -34,12 +34,17 @@ function [CD,CL]=aeroDragLiftSentman(theta,Tatmos,v,rho)
 
     CD=-(P/sqrt(pi)+gammaCHEM*Q*Z+gammaCHEM/2*vrvinf*(gammaCHEM*sqrt(pi)*Z+P));
     CL=-(L*G*Z+L/2*vrvinf*(gammaCHEM*sqrt(pi)*Z+P));
+    if theta==90 
+      CD=0;
+      CL=0;
+    end
+    %CD=-abs(2.8*sind(theta-90))      %% simplified formula, adopted from Traub
+    %CL=-abs(0.42*sind(2*(theta-90))) %% simplified formula, adopted from Traub
+%input('ss' )
   elseif GSImodel==2 %% fast Sentman, to be implemented
     CD=0;
     CL=0;
   else
     fprintf('\n error aeroDragLiftSentman: no GSI model chosen \n');
   end
-CD
-CL
 end
